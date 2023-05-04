@@ -88,13 +88,13 @@ posts.forEach((element, i, array) =>{
     post.innerHTML +=   `<div class="post__footer">
                             <div class="likes js-likes">
                                 <div class="likes__cta">
-                                    <a class="like-button  js-like-button" href="#" data-postid="1">
+                                    <a class="like-button  js-like-button" data-postid="${singlePost.id}">
                                         <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                                         <span class="like-button__label">Mi Piace</span>
                                     </a>
                                 </div>
                                 <div class="likes__counter">
-                                    Piace a <b id="like-counter-1" class="js-likes-counter">80</b> persone
+                                    Piace a <b id="like-counter-${singlePost.id}" class="js-likes-counter">${singlePost.likes}</b> persone
                                 </div>
                             </div>
                         </div>`;
@@ -102,6 +102,43 @@ posts.forEach((element, i, array) =>{
     containerEl.append(post);
     
 });
+
+const btnLike = document.querySelectorAll(".like-button");
+
+btnLike.forEach(element =>{
+    element.addEventListener("click", like)
+})
+
+let liked = [];
+// funzione per il like
+function like(){
+    let idPost = this.getAttribute("data-postid")
+    let counter = document.getElementById(`like-counter-${idPost}`);
+    this.classList.toggle("like-button--liked");
+    if(liked.includes(idPost) == false){
+        add(idPost, counter);
+    }else{
+        remove(idPost, counter);
+    }
+}
+
+
+// funzione per aggiungere
+
+function add(idPost, counter){
+    liked.push(idPost);
+    posts[idPost-1].likes++
+    counter.innerText = posts[idPost-1].likes;
+}
+
+// funzione per togliere
+
+function remove(idPost, counter){
+    posts[idPost-1].likes--;
+    liked = liked.filter(i => i !== idPost);
+    counter.innerText = posts[idPost-1].likes;
+}
+
 
 
 
